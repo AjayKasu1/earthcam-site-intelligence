@@ -1,0 +1,35 @@
+# System files
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Data
+DataSet/
+*.mp4
+*.avi
+*.jpg
+*.png
+# Keep example images if specific ones are needed, but ignore general data dump
+# excluding all images for now as the user has a DataSet folder
+
+# Large files (optional, but good practice)
+*.weights
+*.pt
+# Wait, we NEED best.pt for the app deployment. 
+# Re-including best.pt specifically if we exclude *.pt
+!best.pt
+
+# Notebooks (optional, sometimes we want them)
+.ipynb_checkpoints
