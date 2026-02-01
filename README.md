@@ -4,7 +4,11 @@
 ![YOLOv8](https://img.shields.io/badge/Model-YOLOv8-green)
 ![Streamlit](https://img.shields.io/badge/App-Streamlit-red)
 
+![Project Demo](demo_preview.gif)
+
 An end-to-end Computer Vision & Data Analytics pipeline designed to monitor construction site safety, productivity, and logistics automatically. Built as a portfolio project for a **Junior Data Scientist** role.
+
+[🎥 Watch Full Demo Video (33MB)](colab_outputs/demo_full.mp4)
 
 ## 🎯 Project Goal
 Transform raw video footage into actionable business insights by detecting 26 granular classes and mapping them to 3 key "Business Pillars":
