@@ -2,9 +2,11 @@
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![YOLOv8](https://img.shields.io/badge/Model-YOLOv8-green)
-![Streamlit](https://img.shields.io/badge/App-Streamlit-red)
+[![Streamlit](https://img.shields.io/badge/App-Streamlit-red)](https://ajaykasu1-earthcam-site-intelligence-app-mjskpq.streamlit.app/)
 
 ![Project Demo](demo_preview.gif)
+
+## 🔴 [**Launch Live App**](https://ajaykasu1-earthcam-site-intelligence-app-mjskpq.streamlit.app/)
 
 An end-to-end Computer Vision & Data Analytics pipeline designed to monitor construction site safety, productivity, and logistics automatically. Built as a portfolio project for a **Junior Data Scientist** role.
 
