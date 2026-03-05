@@ -105,12 +105,11 @@ if uploaded_file is not None:
             
             # Output setup
             output_temp = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-            # Attempt to use H.264 (avc1) for browser support, fallback to mp4v if needed
-            try:
-                fourcc = cv2.VideoWriter_fourcc(*'avc1')
-            except:
-                fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-                
+            # Attempt to use browser-compatible codec
+            # 'avc1' is H.264 (best for web), but requires openh264 on the server
+            # 'mp4v' is a good fallback that most browsers can download and play locally
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v') 
+            
             width = int(vf.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(vf.get(cv2.CAP_PROP_FRAME_HEIGHT))
             out = cv2.VideoWriter(output_temp.name, fourcc, fps, (width, height))
@@ -121,13 +120,14 @@ if uploaded_file is not None:
             max_frames = fps * 10
             count = 0
             
+            status_text = st.empty()
             while vf.isOpened() and count < max_frames:
                 ret, frame = vf.read()
                 if not ret:
                     break
                 
                 # Inference
-                results = model.predict(frame, conf=conf_threshold)
+                results = model.predict(frame, conf=conf_threshold, verbose=False)
                 res_plotted = results[0].plot()
                 
                 # Write to video file
@@ -135,7 +135,7 @@ if uploaded_file is not None:
                 
                 # Update UI (convert BGR to RGB)
                 res_rgb = cv2.cvtColor(res_plotted, cv2.COLOR_BGR2RGB)
-                st_frame.image(res_rgb, caption=f"Processing: {start_time + count/fps:.1f}s", use_container_width=True)
+                st_frame.image(res_rgb, caption=f"Analyzing: {start_time + count/fps:.1f}s", use_container_width=True)
                 
                 count += 1
                 progress_bar.progress(min(count / max_frames, 1.0))
@@ -145,20 +145,18 @@ if uploaded_file is not None:
             
             # Show Result
             st.success("Analysis Complete!")
-            st.subheader("Result Playback")
             
-            # We need to re-open the file to read bytes for st.video/download
-            # Note: OpenCV's 'avc1' sometimes has issues with browsers if ffmpeg isn't perfectly linked.
-            # But let's try displaying it.
-            try:
-                st.video(output_temp.name)
-            except:
-                st.warning("Could not natively play video, but you can download it below.")
-                
+            # Provide Download instantly
             with open(output_temp.name, "rb") as file:
-                btn = st.download_button(
+                video_bytes = file.read()
+                st.download_button(
                     label="⬇️ Download Analyzed Video",
-                    data=file,
+                    data=video_bytes,
                     file_name="earthcam_analysis.mp4",
-                    mime="video/mp4"
+                    mime="video/mp4",
+                    type="primary"
                 )
+            
+            # Try to show playback (might still fail in some browsers due to codec, but download will work)
+            st.subheader("Result Preview")
+            st.video(video_bytes)
