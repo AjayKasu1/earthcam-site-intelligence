@@ -1,5 +1,10 @@
 import streamlit as st
-import cv2
+try:
+    import cv2
+except ImportError as e:
+    st.error(f"Critical Dependency Error: {e}")
+    st.info("This is usually caused by missing system libraries on Streamlit Cloud. Please ensure 'packages.txt' contains 'libgl1' and 'libglib2.0-0'.")
+    st.stop()
 import tempfile
 import numpy as np
 from PIL import Image
