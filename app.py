@@ -30,7 +30,7 @@ st.markdown("""
         border-radius: 10px;
     }
 </style>
-""", unsafe_allow_value=True)
+""", unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
