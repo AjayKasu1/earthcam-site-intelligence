@@ -1,16 +1,8 @@
 import streamlit as st
-try:
-    import cv2
-except ImportError as e:
-    st.error(f"Critical Dependency Error: {e}")
-    st.info("This is usually caused by missing system libraries on Streamlit Cloud. Please ensure 'packages.txt' contains 'libgl1' and 'libglib2.0-0'.")
-    st.stop()
-import tempfile
-import numpy as np
-from PIL import Image
-from ultralytics import YOLO
 import os
-import time
+import sys
+
+print("APP_DEBUG: Script execution started")
 
 # Set page config
 st.set_page_config(
@@ -19,6 +11,22 @@ st.set_page_config(
     layout="wide"
 )
 
+print("APP_DEBUG: Attempting to import OpenCV")
+try:
+    import cv2
+    print(f"APP_DEBUG: OpenCV imported successfully, version: {cv2.__version__}")
+except Exception as e:
+    print(f"APP_DEBUG: OpenCV import FAILED: {str(e)}")
+    st.error(f"Critical Dependency Error: {e}")
+    st.stop()
+
+print("APP_DEBUG: Importing other libraries")
+import tempfile
+import numpy as np
+from PIL import Image
+import time
+
+print("APP_DEBUG: UI rendering started")
 st.title("🏗️ EarthCam Site Intelligence Demo")
 st.markdown("""
 <style>
@@ -43,10 +51,14 @@ conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.25, 0.05)
 # Load Model
 @st.cache_resource
 def load_model():
+    print("APP_DEBUG: Inside load_model - importing YOLO")
+    from ultralytics import YOLO
+    print("APP_DEBUG: YOLO imported")
     if os.path.exists("best.pt"):
+        print("APP_DEBUG: Loading best.pt")
         return YOLO("best.pt")
     else:
-        st.sidebar.warning("Note: Custom 'best.pt' not found. Using standard YOLOv8n for demo.")
+        print("APP_DEBUG: best.pt not found, loading yolov8n.pt")
         return YOLO("yolov8n.pt")
 
 try:
